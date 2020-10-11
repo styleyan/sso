@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.isyxf.sso.cas.mapper.UserMapper">
+    <sql id="field">
+        id, username, password, nickname, realname, face, mobile, email, sex, birthday, created_time, updated_time
+    </sql>
+
+    <insert id="insertUser" parameterType="com.isyxf.sso.cas.pojo.User">
+        INSERT INTO users(`id`, username, password, nickname, face, sex, created_time, updated_time, birthday)
+        VALUES (#{id}, #{username}, #{password}, #{nickname}, #{face}, #{sex}, #{createdTime}, #{updatedTime}, #{birthday})
+    </insert>
+
+    <select id="queryUserByLogin" parameterType="com.isyxf.sso.cas.pojo.UserBO" resultType="com.isyxf.sso.cas.pojo.User">
+        SELECT
+         <include refid="field"/>
+         FROM users WHERE username = #{username} and password = #{password}
+    </select>
+</mapper>
