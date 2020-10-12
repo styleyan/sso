@@ -8,5 +8,5 @@ import lombok.Setter;
 public class UserBO {
     private String username;
     private String password;
-    private String confirmPassword;
+    private String returnUrl;
 }

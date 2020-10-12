@@ -72,4 +72,9 @@ public class User {
      * 更新时间 更新时间
      */
     private Date updatedTime;
+
+    /**
+     * 回调地址
+     */
+    private String returnUrl;
 }
