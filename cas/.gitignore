@@ -34,3 +34,4 @@ build/
 
 # 配置文件忽略
 application-local.yml
+.mvn
