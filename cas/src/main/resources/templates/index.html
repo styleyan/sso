@@ -3,8 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        h2{
+            text-align: center;
+        }
+        .from-login{
+            text-align: center;
+        }
+        .from-login p{
+            margin-bottom: 16px;
+        }
+        .from-login label{
+            width: 80px;
+            padding-right: 8px;
+            text-align: center;
+        }
+        .from-login input {
+            padding: 6px;
+        }
+    </style>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
 </head>
 <body>
-    我是首页,233
+<h2 th:text="${msg}"></h2>
+<div th:unless="${isLogin}" class="from-login">
+    <p class="row"><label>用户名:</label><input id="userName" value="cas.sso" type="text"/></p>
+    <p class="row"><label>密&nbsp;&nbsp;码:</label><input id="userPwd" value="l123456" type="password"/></p>
+    <p><button id="sendBtn">提交</button></p>
+</div>
+<script>
+    const callbackUrl = "[[${callbackUrl}]]"
+    $('#sendBtn').click(function () {
+        var userName = $('#userName').val();
+        var userPwd = $('#userPwd').val();
+
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '/api/getUser',
+            data: JSON.stringify({
+                username: userName,
+                password: userPwd,
+                returnUrl: callbackUrl,
+            }),
+            success: function (data) {
+                location.reload()
+            },
+            error: function (data) {
+                console.log(data)
+            }
+        })
+    });
+</script>
 </body>
 </html>

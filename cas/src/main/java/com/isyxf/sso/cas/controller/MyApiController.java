@@ -1,5 +1,6 @@
 package com.isyxf.sso.cas.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.isyxf.sso.cas.pojo.User;
 import com.isyxf.sso.cas.pojo.UserBO;
 import com.isyxf.sso.cas.service.LoginService;
@@ -26,7 +27,7 @@ public class MyApiController extends BaseController {
         if (user != null) {
             String ticket = "userToken:" + UUID.randomUUID().toString().trim() + user.getId();
             int timeout = 60 * 60 *24 *365;
-            RedisUtils.setValueTimeout(ticket, user, timeout);
+            RedisUtils.setValueTimeout(ticket, JSON.toJSONString(user), timeout);
             Cookie cookie = new Cookie("access_token", ticket);
             cookie.setHttpOnly(true);
             cookie.setPath("/");

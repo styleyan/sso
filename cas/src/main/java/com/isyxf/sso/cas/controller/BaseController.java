@@ -1,10 +1,11 @@
 package com.isyxf.sso.cas.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.isyxf.sso.cas.pojo.User;
+import com.isyxf.sso.cas.utils.CookiesUtils;
 import com.isyxf.sso.cas.utils.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -18,22 +19,20 @@ public class BaseController {
      * @return
      */
     public User UserInfo(HttpServletRequest request) {
-        Cookie[] ck = request.getCookies();
-        String token = null;
+        String token = CookiesUtils.getSingleCookie(request,"access_token");
         User user = null;
 
-        if (ck == null) {
-            return user;
-        }
-        for (int i = 0; i < ck.length; i++) {
-            if (ck[i].getName().equals("access_token")) {
-                token = ck[i].getValue();
-                break;
-            }
+        if (StringUtils.isBlank(token)) {
+            return null;
         }
 
+
         if (StringUtils.isNotBlank(token)) {
-            user = (User)RedisUtils.getValue(token);
+            String userInfoStr = (String) RedisUtils.getValue(token);
+
+            if (StringUtils.isNotBlank(userInfoStr)) {
+                user = JSON.parseObject(userInfoStr, User.class);
+            }
         }
         return user;
     }
