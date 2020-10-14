@@ -16,10 +16,12 @@ public class CookiesUtils {
         Cookie[] ck = request.getCookies();
         String val = "";
 
-        for (int i = 0; i < ck.length; i++) {
-            if (ck[i].getName().equals(key)) {
-                val = ck[i].getValue();
-                break;
+        if (ck != null) {
+            for (int i = 0; i < ck.length; i++) {
+                if (ck[i].getName().equals(key)) {
+                    val = ck[i].getValue();
+                    break;
+                }
             }
         }
         return val;
