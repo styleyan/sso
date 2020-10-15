@@ -32,7 +32,8 @@
     <p><button id="sendBtn">提交</button></p>
 </div>
 <script>
-    const callbackUrl = "[[${callbackUrl}]]"
+    const callbackUrl = "[[${callbackUrl}]]" || "https://wwww.baidu.com";
+
     $('#sendBtn').click(function () {
         var userName = $('#userName').val();
         var userPwd = $('#userPwd').val();
@@ -41,14 +42,16 @@
             type: 'post',
             dataType: 'json',
             contentType: 'application/json',
-            url: '/api/getUser',
+            url: '/api/login',
             data: JSON.stringify({
                 username: userName,
                 password: userPwd,
-                returnUrl: callbackUrl,
             }),
-            success: function (data) {
-                location.reload()
+            success: function (ticket) {
+                const url = callbackUrl + "?tmpTicket=" + ticket.result;
+
+                // location.replace(url);
+                console.log(url)
             },
             error: function (data) {
                 console.log(data)

@@ -77,9 +77,4 @@ public class User {
      * 回调地址
      */
     private String returnUrl;
-
-    /**
-     * token
-     */
-    private String userUniqueToken;
 }
