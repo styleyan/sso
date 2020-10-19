@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>SSO系统</title>
     <style>
         h2{
             text-align: center;
@@ -31,8 +31,11 @@
     <p class="row"><label>密&nbsp;&nbsp;码:</label><input id="userPwd" value="l123456" type="password"/></p>
     <p><button id="sendBtn">提交</button></p>
 </div>
+<div th:if="${isLogin}">
+    您已登录~~
+</div>
 <script>
-    const callbackUrl = "[[${callbackUrl}]]" || "https://wwww.baidu.com";
+    const callbackUrl = "[[${callbackUrl}]]";
 
     $('#sendBtn').click(function () {
         var userName = $('#userName').val();
@@ -48,10 +51,12 @@
                 password: userPwd,
             }),
             success: function (ticket) {
-                const url = callbackUrl + "?tmpTicket=" + ticket.result;
-
-                // location.replace(url);
-                console.log(url)
+                if (callbackUrl) {
+                    const url = callbackUrl + "?tmpTicket=" + ticket.result;
+                    location.href = url;
+                } else {
+                    location.reload()
+                }
             },
             error: function (data) {
                 console.log(data)

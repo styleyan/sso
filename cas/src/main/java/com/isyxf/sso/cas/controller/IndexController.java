@@ -13,13 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 public class IndexController {
 
     @RequestMapping("/")
-    public ModelAndView index(@RequestParam(value = "callbackUrl", required = false) String callbackUrl, HttpServletRequest request) {
+    public ModelAndView index(@RequestParam(value = "returnUrl", required = false) String returnUrl, HttpServletRequest request) {
         String loginStatus = CookiesUtils.getSingleCookie(request, "cookie_user_ticket");
 
         ModelAndView modelAndView = new ModelAndView("index.html");
-        modelAndView.addObject("callbackUrl", callbackUrl);
+        modelAndView.addObject("callbackUrl", returnUrl);
         modelAndView.addObject("isLogin", StringUtils.isNotBlank(loginStatus));
-        modelAndView.addObject("msg", "CAS界面");
+        modelAndView.addObject("msg", "欢迎来到单点登录系统");
 
         return modelAndView;
     }

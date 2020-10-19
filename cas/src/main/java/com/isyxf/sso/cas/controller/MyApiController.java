@@ -10,9 +10,7 @@ import com.isyxf.sso.cas.utils.MD5Utils;
 import com.isyxf.sso.cas.utils.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -36,23 +34,23 @@ public class MyApiController {
      * @return
      */
     @PostMapping("/api/verifyTmpTicket")
-    public JsonResult verifyTmpTicket(@RequestBody String tmpTicket, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String tmpTicketKeyName = REDIS_TMP_TICKET + ":" + tmpTicket;
-        String tmpTicketValue = (String)RedisUtils.getValue(tmpTicketKeyName);
+    public JsonResult verifyTmpTicket(@RequestParam("tmpTicket") String tmpTicket, HttpServletRequest request, HttpServletResponse response) throws Exception {
+//        String tmpTicketKeyName = REDIS_TMP_TICKET + ":" + tmpTicket;
+//        String tmpTicketValue = (String)RedisUtils.getValue(tmpTicketKeyName);
+//
+//        if (StringUtils.isBlank(tmpTicketValue)) {
+//            return JsonResult.failure(2339, "临时票据无效");
+//        }
+//
+//        // 0. 如果临时票据 OK, 则需要销毁，并且拿到 CAS 端 cookie 中的全局 userTicker, 以此在获取用户会话
+//        if (!tmpTicketValue.equals(MD5Utils.getMD5Str(tmpTicket))) {
+//            return JsonResult.failure(2339, "临时票据无效");
+//        } else {
+//            // 销毁临时票据
+//            RedisUtils.delKey(tmpTicketKeyName);
+//        }
 
-        if (StringUtils.isBlank(tmpTicketValue)) {
-            return JsonResult.failure(2339, "临时票据无效");
-        }
-
-        // 0. 如果临时票据 OK, 则需要销毁，并且拿到 CAS 端 cookie 中的全局 userTicker, 以此在获取用户会话
-        if (!tmpTicketValue.equals(MD5Utils.getMD5Str(tmpTicket))) {
-            return JsonResult.failure(2339, "临时票据无效");
-        } else {
-            // 销毁临时票据
-            RedisUtils.delKey(tmpTicketKeyName);
-        }
-
-        // 1. 验证并且获取用户的userTicket（TODO: 这一步没搞明白, 这个是跨域过来请求的，怎么能拿到 cas 项目中的cookies 呐)
+        // 1. 验证并且获取用户的userTicket
         String userTicket = CookiesUtils.getSingleCookie(request, "cookie_user_ticket");
         String userId = (String)RedisUtils.getValue(REDIS_USER_TICKET + ":" + userTicket);
         if (StringUtils.isBlank(userId)) {
@@ -116,7 +114,7 @@ public class MyApiController {
     private void setCookie(String key, String val, HttpServletResponse response) {
         Cookie ck = new Cookie(key, val);
         ck.setPath("/");
-        ck.setHttpOnly(true);
+        ck.setDomain("yxf.me");
         ck.setMaxAge(60 * 60 * 60);
         response.addCookie(ck);
     }
