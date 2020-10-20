@@ -2,6 +2,7 @@ package com.isyxf.sso.cas.utils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author xiaofei.yan
@@ -25,5 +26,16 @@ public class CookiesUtils {
             }
         }
         return val;
+    }
+
+    /**
+     * 添加cookie
+     */
+    public static void setCookie(HttpServletResponse response, String key, String val, String path, Integer timer, String domain) {
+        Cookie ck = new Cookie(key, val);
+        ck.setPath(path);
+        ck.setDomain(domain);
+        ck.setMaxAge(timer);
+        response.addCookie(ck);
     }
 }
