@@ -15,17 +15,6 @@ server:
 #
 ############################################################
 spring:
-  # redis 配置
-  redis:
-    host: xxxxxx
-    port: xxxx
-    password: xxxxxxx
-    database: 2
-    lettuce:
-      pool:
-        max-active: 10
-        max-wait: 3000
-    timeout: 4000
   # jackson
   jackson:
     serialization:

@@ -35,20 +35,20 @@ public class MyApiController {
      */
     @PostMapping("/api/verifyTmpTicket")
     public JsonResult verifyTmpTicket(@RequestParam("tmpTicket") String tmpTicket, HttpServletRequest request, HttpServletResponse response) throws Exception {
-//        String tmpTicketKeyName = REDIS_TMP_TICKET + ":" + tmpTicket;
-//        String tmpTicketValue = (String)RedisUtils.getValue(tmpTicketKeyName);
-//
-//        if (StringUtils.isBlank(tmpTicketValue)) {
-//            return JsonResult.failure(2339, "临时票据无效");
-//        }
-//
-//        // 0. 如果临时票据 OK, 则需要销毁，并且拿到 CAS 端 cookie 中的全局 userTicker, 以此在获取用户会话
-//        if (!tmpTicketValue.equals(MD5Utils.getMD5Str(tmpTicket))) {
-//            return JsonResult.failure(2339, "临时票据无效");
-//        } else {
-//            // 销毁临时票据
-//            RedisUtils.delKey(tmpTicketKeyName);
-//        }
+        String tmpTicketKeyName = REDIS_TMP_TICKET + ":" + tmpTicket;
+        String tmpTicketValue = (String)RedisUtils.getValue(tmpTicketKeyName);
+
+        if (StringUtils.isBlank(tmpTicketValue)) {
+            return JsonResult.failure(2339, "临时票据无效");
+        }
+
+        // 0. 如果临时票据 OK, 则需要销毁，并且拿到 CAS 端 cookie 中的全局 userTicker, 以此在获取用户会话
+        if (!tmpTicketValue.equals(MD5Utils.getMD5Str(tmpTicket))) {
+            return JsonResult.failure(2339, "临时票据无效");
+        } else {
+            // 销毁临时票据
+            RedisUtils.delKey(tmpTicketKeyName);
+        }
 
         // 1. 验证并且获取用户的userTicket
         String userTicket = CookiesUtils.getSingleCookie(request, "cookie_user_ticket");

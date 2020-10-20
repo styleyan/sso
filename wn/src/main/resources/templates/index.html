@@ -10,6 +10,7 @@
 </head>
 <body>
 <h3 th:text="${msg}"></h3>
+<p th:if="userInfo"><button id="logout">退出</button></p>
 <script>
     $(function () {
         var userInfo = $.cookie("user_info");
@@ -22,26 +23,13 @@
 
         // 存在门票，则发送校验请求
         if (tmpTicket) {
-            // $.ajax({
-            //     type: 'post',
-            //     dataType: 'json',
-            //     contentType: 'application/json',
-            //     url: ssoUrl + '/api/verifyTmpTicket?tmpTicket=' + tmpTicket,
-            //     // xhrFields: {
-            //     //     withCredentials: true
-            //     // },
-            //     success: function (data) {
-            //         console.log(data)
-            //     },
-            //     error: function (data) {
-            //         console.log(data)
-            //     }
-            // });
-
             /** ========= axios ============= **/
             axios.defaults.withCredentials = true;
-            axios.post(ssoUrl + '/api/verifyTmpTicket?tmpTicket=' + tmpTicket).then(function (value) {
-                console.log(value)
+            axios.post(ssoUrl + '/api/verifyTmpTicket?tmpTicket=' + tmpTicket).then(function (data) {
+                if (data.result) {
+                    $.cookie("user_info", JSON.stringify(data.result), { expires: 7, path: '/' })
+                }
+                window.location.replace("http://www.wn.me:8090")
             }).catch(function (reason) {
                 console.log(reason)
             })
@@ -49,6 +37,14 @@
             location.href = ssoUrl + "?returnUrl=http://www.wn.me:8090";
         }
     });
+
+    $(function () {
+        var $logout = $("#logout");
+
+        $logout.click(function () {
+            console.log("2333")
+        });
+    })
     /**
      * 获取连接地址里的参数
      * @param name
