@@ -12,10 +12,12 @@
 <h3 th:text="${msg}"></h3>
 <p th:if="userInfo"><button id="logout">退出</button></p>
 <script>
+    axios.defaults.withCredentials = true;
+    var ssoUrl = "http://www.yxf.me:8078";
+
     $(function () {
         var userInfo = $.cookie("user_info");
         var tmpTicket = getParameter("tmpTicket");
-        var ssoUrl = "http://www.yxf.me:8078";
 
         if (userInfo) {
             return
@@ -23,8 +25,6 @@
 
         // 存在门票，则发送校验请求
         if (tmpTicket) {
-            /** ========= axios ============= **/
-            axios.defaults.withCredentials = true;
             axios.post(ssoUrl + '/api/verifyTmpTicket?tmpTicket=' + tmpTicket).then(function (data) {
                 if (data.result) {
                     $.cookie("user_info", JSON.stringify(data.result), { expires: 7, path: '/' })
@@ -42,9 +42,17 @@
         var $logout = $("#logout");
 
         $logout.click(function () {
-            console.log("2333")
+            var userInfo = $.cookie("user_info");
+            userInfo = JSON.parse(userInfo);
+            axios.get(ssoUrl + '/api/logout?userId=' + userInfo.id).then(function (data) {
+                console.log(data)
+                $logout.hide();
+                $.cookie("user_info", "")
+            }).catch(function (reason) {
+                console.log(reason)
+            })
         });
-    })
+    });
     /**
      * 获取连接地址里的参数
      * @param name

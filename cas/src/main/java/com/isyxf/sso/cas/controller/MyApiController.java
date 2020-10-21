@@ -50,4 +50,21 @@ public class MyApiController {
         return JsonResult.failure(2003, "校验失败");
     }
 
+    /**
+     * 退出登录
+     */
+    @GetMapping("/api/logout")
+    public JsonResult logout(@RequestParam("userId") String userId, HttpServletRequest request, HttpServletResponse response) {
+        // 1. 获取CAS用户门票
+        String userTicket = CookiesUtils.getSingleCookie(request, UserService.USER_TICKET_COOKIE);
+        // 2. 删除CAS用户门票
+        RedisUtils.delKey(UserService.REDIS_USER_TICKET + ":" + userTicket);
+        // 3. 删除CAS登录会话
+        RedisUtils.delKey(UserService.REDIS_USER_TOKEN + ":" + userId);
+        // 4. 删除cookie
+        CookiesUtils.deleteCookie(response, UserService.USER_TICKET_COOKIE, "yxf.me");
+
+        return JsonResult.success();
+    }
+
 }

@@ -38,4 +38,15 @@ public class CookiesUtils {
         ck.setMaxAge(timer);
         response.addCookie(ck);
     }
+
+    /**
+     * 删除cookie
+     */
+    public static void deleteCookie(HttpServletResponse response, String key, String domain) {
+        Cookie cookie = new Cookie(key, null);
+        cookie.setDomain(domain);
+        cookie.setPath("/");
+        cookie.setMaxAge(-1);
+        response.addCookie(cookie);
+    }
 }
