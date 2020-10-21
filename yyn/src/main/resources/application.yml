@@ -1,0 +1,30 @@
+############################################################
+#
+# web访问端口号 约定：8088
+#
+############################################################
+server:
+  port: 8088
+  tomcat:
+    uri-encoding: UTF-8
+  maxx-http-header-size: 80KB
+
+############################################################
+#
+# 配置数据源信息
+#
+############################################################
+spring:
+  # jackson
+  jackson:
+    serialization:
+      fail_on_empty_beans: false
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  # thymeleaf 配置
+  thymeleaf:
+    suffix: .html
+    cache: true
+    encoding: UTF-8
+    mode: HTML
+

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YYN系统</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+    <!-- https://github.com/carhartl/jquery-cookie -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-cookie/1.0/jquery.cookie.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.1.0/axios.min.js"></script>
+</head>
+<body>
+<h3 th:text="${msg}"></h3>
+<p th:if="userInfo"><button id="logout">退出</button></p>
+<script>
+    $(function () {
+        var userInfo = $.cookie("user_info");
+        var tmpTicket = getParameter("tmpTicket");
+        var ssoUrl = "http://www.yxf.me:8078";
+
+        if (userInfo) {
+            return
+        }
+
+        // 存在门票，则发送校验请求
+        if (tmpTicket) {
+            /** ========= axios ============= **/
+            axios.defaults.withCredentials = true;
+            axios.post(ssoUrl + '/api/verifyTmpTicket?tmpTicket=' + tmpTicket).then(function (data) {
+                if (data.result) {
+                    $.cookie("user_info", JSON.stringify(data.result), { expires: 7, path: '/' })
+                }
+                window.location.replace("http://www.yyn.me:8060")
+            }).catch(function (reason) {
+                console.log(reason)
+            })
+        } else {
+            location.href = ssoUrl + "?returnUrl=http://www.yyn.me:8060";
+        }
+    });
+
+    $(function () {
+        var $logout = $("#logout");
+
+        $logout.click(function () {
+            console.log("2333")
+        });
+    })
+    /**
+     * 获取连接地址里的参数
+     * @param name
+     * @returns {string}
+     */
+    function getParameter(name) {
+        var query = window.location.search;
+        var iLen = name.length;
+        var iStart = query.indexOf(name);
+
+        if(iStart == -1){
+            return "";
+        }
+
+        iStart += iLen + 1;
+        var iEnd = query.indexOf("&", iStart);
+        if(iEnd == -1){
+            return query.substring(iStart);
+        }
+    }
+</script>
+</body>
+</html>
